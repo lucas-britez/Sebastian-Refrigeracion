@@ -5,25 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sebastián Refrigeración - Resistencia, Chaco</title>
     
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & Babel -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #000; color: #fff; margin: 0; overflow-x: hidden; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            overflow-x: hidden;
+        }
         .accent-text { color: #00B2A9; }
         .accent-bg { background-color: #00B2A9; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); filter: blur(10px); } to { opacity: 1; transform: translateY(0); filter: blur(0px); } }
+        .accent-border { border-color: #00B2A9; }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); filter: blur(10px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0px); }
+        }
         .animate-fade-up { animation: fadeInUp 1s ease-out forwards; }
-        .chat-transition { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: bottom right; }
+        
+        .chat-transition {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: bottom right;
+        }
         .chat-hidden { opacity: 0; transform: scale(0.8) translateY(20px); pointer-events: none; visibility: hidden; }
         .chat-visible { opacity: 1; transform: scale(1) translateY(0); pointer-events: auto; visibility: visible; }
+
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #000; }
         ::-webkit-scrollbar-thumb { background: #00B2A9; border-radius: 10px; }
@@ -54,42 +80,47 @@
             } catch (e) { return url; }
         };
 
-        // --- MOTOR LÓGICO DE FROST (Siguiendo tu System Instruction) ---
-        const getFrostResponse = async (history) => {
-            const input = history[history.length - 1].text.toLowerCase();
-            await new Promise(res => setTimeout(res, 800)); // Simula procesamiento
-
-            const CIERRE = "\n\nPara asegurar la garantía del trabajo, te invito a pedir un presupuesto por WhatsApp ahora mismo.";
-
-            if (input.includes("hola") || input.includes("buen")) {
-                return "¡Hola! Soy Frost. Contame qué problema tiene tu equipo y te ayudo a coordinar una solución profesional." + CIERRE;
-            }
-            if (input.includes("no enfria") || input.includes("calor") || input.includes("gas")) {
-                return "Si el equipo no enfría, puede ser una fuga de gas o falla en el compresor. Tocarlo sin las herramientas adecuadas puede quemar el motor definitivamente. Lo mejor es que Sebastián lo revise bajo normas de fábrica." + CIERRE;
-            }
-            if (input.includes("ruido") || input.includes("vibra") || input.includes("sonido")) {
-                return "Los ruidos extraños suelen ser fallas en el forzador o piezas sueltas que pueden romper el circuito de frío. No lo sigas usando así para evitar un daño mayor y hablá con Sebastián." + CIERRE;
-            }
-            if (input.includes("agua") || input.includes("pierde") || input.includes("gotea") || input.includes("moj")) {
-                return "La pérdida de agua indica un drenaje tapado o falta de mantenimiento. Esto puede mojar tus paredes o causar un cortocircuito. Un técnico profesional debe limpiar el sistema correctamente." + CIERRE;
-            }
-            if (input.includes("precio") || input.includes("cuanto") || input.includes("sale") || input.includes("presupuesto")) {
-                return "Los presupuestos son personalizados según el tipo de equipo y la falla detectada. Hablá con Sebastián para obtener un valor exacto con garantía oficial." + CIERRE;
-            }
-            if (input.includes("instalar") || input.includes("colocar") || input.includes("limpiar")) {
-                return "Para instalaciones y mantenimientos, Sebastián sigue protocolos estrictos de fábrica para que no pierdas la garantía de tu equipo. Es una inversión necesaria para el confort de tu hogar." + CIERRE;
+        // --- LÓGICA DE RESPUESTA AUTOMATIZADA DE FROST ---
+        const getFrostAutomatedResponse = (input) => {
+            const text = input.toLowerCase();
+            
+            if (text.includes("hola") || text.includes("buen") || text.includes("dia") || text.includes("tarde")) {
+                return "¡Hola! Soy Frost. ¿En qué puedo ayudarte hoy con tu equipo de refrigeración en Resistencia?";
             }
             
-            return "Entiendo. Ese tipo de fallas requieren una revisión técnica presencial para evitar riesgos eléctricos o daños permanentes en el equipo. Te recomiendo contactar a Sebastián para un diagnóstico seguro." + CIERRE;
+            if (text.includes("enfria") || text.includes("frio") || text.includes("calor") || text.includes("no anda") || text.includes("funciona")) {
+                return "Si tu equipo no enfría correctamente, puede ser un problema de gas o del capacitor. Es muy riesgoso intentar arreglarlo uno mismo sin las herramientas adecuadas. Te recomiendo pedir un presupuesto por WhatsApp para que Sebastián realice un service oficial con garantía.";
+            }
+
+            if (text.includes("ruido") || text.includes("sonido") || text.includes("golpe")) {
+                return "Los ruidos extraños suelen indicar fallas en el motor o el ventilador. Seguir usándolo así puede quemar el equipo. Lo mejor es que un técnico profesional de Sebastián Refrigeración lo revise cuanto antes. Escribinos por WhatsApp para coordinar.";
+            }
+
+            if (text.includes("agua") || text.includes("pierde") || text.includes("gotea")) {
+                return "Si pierde agua, puede estar tapado el desagüe o tener falta de mantenimiento. Para evitar daños en tus paredes o cortocircuitos, te sugiero contactar a Sebastián por los botones verdes de abajo y pedir un service de limpieza profunda.";
+            }
+
+            if (text.includes("precio") || text.includes("cuanto") || text.includes("presupuesto") || text.includes("costo")) {
+                return "Los presupuestos dependen del tipo de equipo y la falla exacta. Para darte un precio justo y rápido en Resistencia, por favor tocá el botón verde de WhatsApp y envianos una foto o modelo de tu equipo.";
+            }
+
+            if (text.includes("telefono") || text.includes("numero") || text.includes("hablar") || text.includes("persona") || text.includes("humano")) {
+                return "¡Claro! Para hablar con una persona real, tocá cualquiera de los dos botones verdes flotantes que ves en pantalla. El primero es nuestro canal principal y el segundo es de respaldo para emergencias.";
+            }
+
+            return "Entiendo perfectamente. Para darte una solución segura y con garantía en Resistencia, lo ideal es que hables con nuestro equipo técnico por WhatsApp usando los botones verdes de abajo. ¿Te parece bien?";
         };
 
+        // --- COMPONENTS ---
         const Navbar = () => {
             const [logoSrc, setLogoSrc] = useState('https://i.ibb.co/WWs7VrVs/IMG-20260217-WA0064.jpg');
             useEffect(() => { getCachedImage('https://i.ibb.co/WWs7VrVs/IMG-20260217-WA0064.jpg', 'navbar_logo').then(setLogoSrc); }, []);
             return (
                 <nav className="fixed top-0 left-0 right-0 z-50 bg-[#121212]/80 backdrop-blur-md border-b border-white/10">
                     <div className="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
-                        <h1 className="text-xl md:text-3xl font-black tracking-tighter text-white uppercase italic">SEBASTIÁN <span className="accent-text">REFRIGERACIÓN</span></h1>
+                        <h1 className="text-xl md:text-3xl font-black tracking-tighter text-white uppercase italic">
+                            SEBASTIÁN <span className="accent-text">REFRIGERACIÓN</span>
+                        </h1>
                         <img src={logoSrc} alt="Logo" className="h-16 md:h-20 w-auto object-contain" />
                     </div>
                 </nav>
@@ -101,11 +132,13 @@
             useEffect(() => { getCachedImage('https://i.ibb.co/8DBnrVkk/20260305-123710.jpg', 'hero_bg').then(setBgSrc); }, []);
             return (
                 <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
-                    <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url("${bgSrc}")` }}><div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/90"></div></div>
+                    <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url("${bgSrc}")` }}>
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/90"></div>
+                    </div>
                     <div className="relative z-10 text-center px-6 max-w-5xl animate-fade-up">
-                        <span className="accent-text font-bold tracking-[0.4em] uppercase mb-4 block text-xs md:text-sm">Especialistas en Climatización</span>
-                        <h2 className="text-4xl sm:text-6xl md:text-8xl font-black text-white leading-[0.9] mb-8 uppercase">CONFORT Y <span className="accent-text">CLIMATIZACIÓN</span></h2>
-                        <p className="text-gray-200 text-base md:text-xl max-w-2xl mx-auto font-medium">Servicio técnico integral en Resistencia, Chaco.</p>
+                        <span className="accent-text font-bold tracking-[0.4em] uppercase mb-4 block text-xs md:text-sm drop-shadow-lg">Especialistas en Climatización Profesional</span>
+                        <h2 className="text-4xl sm:text-6xl md:text-8xl font-black text-white leading-[0.9] mb-8">CONFORT Y <span className="accent-text">CLIMATIZACIÓN</span> PARA TU HOGAR</h2>
+                        <p className="text-gray-200 text-base md:text-xl max-w-2xl mx-auto font-medium">Servicio técnico integral en Resistencia, Chaco. Instalación, mantenimiento y reparación con estándares de alta montaña.</p>
                     </div>
                 </section>
             );
@@ -113,23 +146,45 @@
 
         const Services = () => {
             const services = [
-                { title: 'Instalación y limpieza', desc: 'Montaje profesional y limpieza profunda para aire puro.', img: 'https://i.ibb.co/gbS6sy6s/Screenshot-20260217-062139-Facebook-1.jpg', benefits: ['Normas de fábrica', 'Aire puro', 'Rendimiento'] },
-                { title: 'Carga de gas', desc: 'Diagnóstico y recarga de refrigerante inmediata.', img: 'https://i.ibb.co/CKND5yrw/Screenshot-20260217-062142-Facebook-1.jpg', benefits: ['Carga segura', 'Arranque', 'Frío total'] },
-                { title: 'Mantenimiento', desc: 'Revisiones preventivas para alargar la vida útil.', img: 'https://i.ibb.co/8DrppxSd/Screenshot-20260217-062513-Facebook-1.jpg', benefits: ['Ahorro', 'Vida útil', 'Prevención'] }
+                { 
+                    title: 'Instalación y limpieza de split y aire ventana', 
+                    desc: 'Montaje profesional bajo normas de fábrica y limpieza profunda para asegurar un aire libre de alérgenos y un rendimiento óptimo en los días de mayor calor en Resistencia.', 
+                    img: 'https://i.ibb.co/gbS6sy6s/Screenshot-20260217-062139-Facebook-1.jpg',
+                    benefits: ['Normas de fábrica', 'Aire sin alérgenos', 'Rendimiento máximo']
+                },
+                { 
+                    title: 'Carga de gas y cambio de capacitor', 
+                    desc: 'Diagnóstico preciso y recarga de refrigerante. Solucionamos problemas de arranque y falta de rendimiento de inmediato para que tu equipo vuelva a enfriar al 100%.', 
+                    img: 'https://i.ibb.co/CKND5yrw/Screenshot-20260217-062142-Facebook-1.jpg',
+                    benefits: ['Carga de gas', 'Arranque inmediato', 'Frío garantizado']
+                },
+                { 
+                    title: 'Mantenimiento en general', 
+                    desc: 'Revisiones preventivas de circuitos eléctricos, desagües y filtros. Alargamos la vida útil de tu equipo y reducimos el consumo eléctrico de tu hogar.', 
+                    img: 'https://i.ibb.co/8DrppxSd/Screenshot-20260217-062513-Facebook-1.jpg',
+                    benefits: ['Ahorro energético', 'Vida útil extendida', 'Prevención de fallas']
+                }
             ];
             return (
                 <section className="py-24 px-6 bg-[#121212]">
                     <div className="max-w-7xl mx-auto">
-                        <h2 className="text-4xl md:text-6xl font-black mb-16 uppercase italic">MANTENÉ TU <span className="accent-text">EQUILIBRIO</span></h2>
+                        <h2 className="text-4xl md:text-6xl font-black mb-16">MANTENÉ TU <span className="accent-text">EQUILIBRIO</span> TÉRMICO</h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {services.map((s, i) => (
-                                <div key={i} className="glass rounded-3xl overflow-hidden group animate-fade-up flex flex-col" style={{animationDelay: `${i * 0.2}s`}}>
-                                    <div className="h-56 overflow-hidden relative"><img src={s.img} className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" /><h3 className="absolute bottom-4 left-6 text-xl font-black uppercase italic">{s.title}</h3></div>
+                                <div key={i} className="glass rounded-3xl overflow-hidden group animate-fade-up flex flex-col h-full" style={{animationDelay: `${i * 0.2}s`}}>
+                                    <div className="h-56 overflow-hidden relative">
+                                        <img src={s.img} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-70 group-hover:opacity-100" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                                        <h3 className="absolute bottom-4 left-6 text-xl font-black text-white leading-tight pr-4 drop-shadow-lg">{s.title}</h3>
+                                    </div>
                                     <div className="p-8 flex flex-col flex-grow">
-                                        <p className="text-gray-400 mb-6 text-sm">{s.desc}</p>
-                                        <ul className="space-y-2">
+                                        <p className="text-gray-400 mb-6 flex-grow text-sm leading-relaxed">{s.desc}</p>
+                                        <ul className="space-y-3">
                                             {s.benefits.map((b, idx) => (
-                                                <li key={idx} className="flex items-center text-[10px] font-black uppercase text-[#00B2A9] tracking-tighter"><span className="w-2 h-2 accent-bg rounded-full mr-2"></span>{b}</li>
+                                                <li key={idx} className="flex items-center text-[10px] font-black uppercase tracking-widest text-[#00B2A9]">
+                                                    <span className="w-2 h-2 accent-bg rounded-full mr-3 shadow-[0_0_10px_#00B2A9]"></span>
+                                                    {b}
+                                                </li>
                                             ))}
                                         </ul>
                                     </div>
@@ -142,6 +197,107 @@
         };
 
         const FrostChat = ({ isOpen, onClose }) => {
-            const [messages, setMessages] = useState(() => JSON.parse(localStorage.getItem('frost_chat_history') || '[]'));
+            const [messages, setMessages] = useState(() => {
+                const saved = localStorage.getItem('frost_chat_history');
+                return saved ? JSON.parse(saved) : [];
+            });
             const [input, setInput] = useState('');
-            const [isTyping, setIsTyping] =
+            const [isTyping, setIsTyping] = useState(false);
+            const [avatarSrc, setAvatarSrc] = useState('https://i.ibb.co/j9DDb3TR/1772731924387-1.png');
+            const scrollRef = useRef();
+
+            useEffect(() => { getCachedImage('https://i.ibb.co/j9DDb3TR/1772731924387-1.png', 'frost_avatar').then(setAvatarSrc); }, []);
+            useEffect(() => { 
+                localStorage.setItem('frost_chat_history', JSON.stringify(messages));
+                if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+            }, [messages, isTyping]);
+
+            const handleSend = () => {
+                if (!input.trim() || isTyping) return;
+                const userMsg = { role: 'user', text: input };
+                setMessages(prev => [...prev, userMsg]);
+                setInput('');
+                setIsTyping(true);
+                
+                // Respuesta automatizada local (instantánea)
+                setTimeout(() => {
+                    const res = getFrostAutomatedResponse(input);
+                    setIsTyping(false);
+                    setMessages(prev => [...prev, { role: 'model', text: res }]);
+                }, 800);
+            };
+
+            return (
+                <div className={`fixed bottom-24 right-6 z-[100] chat-transition ${isOpen ? 'chat-visible' : 'chat-hidden'}`}>
+                    <div className="glass w-[320px] sm:w-[380px] h-[500px] rounded-3xl overflow-hidden shadow-2xl flex flex-col border border-[#00B2A9]/30">
+                        <div className="accent-bg p-5 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <img src={avatarSrc} className="w-10 h-10 rounded-full border-2 border-black object-cover" />
+                                <div><h4 className="font-black text-black text-xs tracking-widest uppercase">Frost Assistant</h4><p className="text-[10px] text-black/70 font-bold uppercase">Diagnóstico IA</p></div>
+                            </div>
+                            <button onClick={onClose} className="text-black font-bold p-2 hover:scale-110 transition-transform">✕</button>
+                        </div>
+                        <div ref={scrollRef} className="flex-grow overflow-y-auto p-5 space-y-4 bg-black/20">
+                            {messages.length === 0 && (
+                                <div className="glass p-5 rounded-2xl border-dashed border-white/20 animate-fade-up">
+                                    <p className="accent-text font-black text-xs uppercase tracking-widest mb-2">¡Hola! Soy Frost</p>
+                                    <p className="text-gray-300 text-xs leading-relaxed">¿Tu equipo no enfría bien o hace ruidos extraños? Escribí abajo tu problema y te daré un diagnóstico instantáneo.</p>
+                                </div>
+                            )}
+                            {messages.map((m, i) => (
+                                <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                    <div className={`max-w-[85%] p-4 rounded-2xl text-sm ${m.role === 'user' ? 'accent-bg text-black font-medium' : 'glass text-gray-200'}`}>{m.text}</div>
+                                </div>
+                            ))}
+                            {isTyping && <div className="text-xs accent-text animate-pulse">Frost está analizando tu caso...</div>}
+                        </div>
+                        <div className="p-4 bg-black/40 flex gap-2">
+                            <input type="text" value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSend()} placeholder="Describe la falla..." className="flex-grow bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-xs text-white outline-none" />
+                            <button onClick={handleSend} className="accent-bg text-black p-2 rounded-xl hover:scale-105 transition-transform">➤</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const WhatsAppButtons = ({ onToggleFrost }) => (
+            <div className="fixed bottom-6 right-6 z-[90] flex flex-col gap-3 items-end w-full max-w-[280px] sm:max-w-xs">
+                <button onClick={onToggleFrost} className="accent-bg text-black px-6 py-4 rounded-xl font-black text-xs uppercase tracking-wider shadow-xl border border-white/20 hover:scale-105 transition-transform text-right leading-tight">Chatea con Frost, nuestra IA y resuelve tus dudas</button>
+                <a href="https://wa.me/543624175071" target="_blank" className="bg-[#25D366] text-white px-6 py-3 rounded-xl font-black text-sm uppercase tracking-widest w-full text-center hover:scale-105 transition-transform">Chatea por WhatsApp</a>
+                <a href="https://wa.me/543624175080" target="_blank" className="bg-[#25D366] text-white px-6 py-3 rounded-xl font-black text-sm uppercase tracking-widest w-full text-center hover:scale-105 transition-transform">Número de respaldo</a>
+            </div>
+        );
+
+        const App = () => {
+            const [isChatOpen, setIsChatOpen] = useState(false);
+            return (
+                <div className="relative selection:bg-[#00B2A9] selection:text-black">
+                    <Navbar />
+                    <Hero />
+                    <Services />
+                    <section className="py-24 px-6 bg-black relative overflow-hidden">
+                        <div className="max-w-4xl mx-auto text-center animate-fade-up">
+                            <h3 className="text-4xl md:text-6xl font-black mb-8 uppercase">SOMOS <span className="accent-text">CHACO</span>. SOMOS REFRIGERACIÓN.</h3>
+                            <p className="text-gray-300 text-lg md:text-xl leading-relaxed">
+                                Entendemos lo que significa vivir en Resistencia con temperaturas de 40 grados. No es solo comodidad, es salud. Por eso, Sebastián Refrigeración nació para ofrecer el servicio técnico más confiable y rápido de la zona, adaptado a las exigencias de nuestro clima extremo.
+                            </p>
+                        </div>
+                    </section>
+                    <footer className="py-12 border-t border-white/5 bg-[#121212] px-6 text-center">
+                        <div className="max-w-7xl mx-auto">
+                            <h4 className="text-xl font-black italic mb-2 uppercase">SEBASTIÁN <span className="accent-text">REFRIGERACIÓN</span></h4>
+                            <p className="text-gray-500 text-sm">Resistencia, Chaco - Argentina</p>
+                            <p className="text-gray-600 text-[10px] mt-4">© {new Date().getFullYear()} - Todos los derechos reservados</p>
+                        </div>
+                    </footer>
+                    <FrostChat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+                    <WhatsAppButtons onToggleFrost={() => setIsChatOpen(!isChatOpen)} />
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
