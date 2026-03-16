@@ -285,17 +285,17 @@
                         </div>
                     </section>
                     
-                    {/* Footer con espacio extra para scroll y créditos */}
-                    <footer className="pt-12 pb-48 border-t border-white/5 bg-[#121212] px-6 text-center">
+                    {/* Footer con espacio masivo para scroll (pb-96) */}
+                    <footer className="pt-12 pb-96 border-t border-white/5 bg-[#121212] px-6 text-center">
                         <div className="max-w-7xl mx-auto">
                             <h4 className="text-xl font-black italic mb-2 uppercase">SEBASTIÁN <span className="accent-text">REFRIGERACIÓN</span></h4>
                             <p className="text-gray-500 text-sm">Resistencia, Chaco - Argentina</p>
                             <p className="text-gray-600 text-[10px] mt-4">© {new Date().getFullYear()} - Todos los derechos reservados</p>
                             
-                            {/* Créditos del desarrollador */}
-                            <div className="mt-12 pt-8 border-t border-white/5">
-                                <p className="text-gray-500 text-[11px] tracking-wide">
-                                    Este sitio web ha sido creado por un desarrollador independiente, si desea contactarlo haga <a href={`https://wa.me/5493625208004?text=${devMsg}`} target="_blank" className="accent-text font-bold hover:underline">clic aquí</a>
+                            {/* Créditos del desarrollador con margen extra */}
+                            <div className="mt-16 pt-8 border-t border-white/5 mb-12">
+                                <p className="text-gray-500 text-[11px] tracking-wide leading-loose">
+                                    Este sitio web ha sido creado por un desarrollador independiente, <br className="sm:hidden" /> si desea contactarlo haga <a href={`https://wa.me/5493625208004?text=${devMsg}`} target="_blank" className="accent-text font-bold hover:underline px-1 relative z-[110]">clic aquí</a>
                                 </p>
                             </div>
                         </div>
